@@ -1,3 +1,0 @@
-/home/karl/Data/Git/kdtree/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/karl/Data/Git/kdtree/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/karl/Data/Git/kdtree/cmake-build-debug/CMakeFiles/kdtree.dir

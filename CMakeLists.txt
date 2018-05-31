@@ -3,4 +3,4 @@ project(kdtree)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(kdtree main.cpp cmake-build-debug/tree.cpp cmake-build-debug/tree.h kdtree.cpp kdtree.h)
+add_executable(kdtree main.cpp kdtree.cpp kdtree.h)
