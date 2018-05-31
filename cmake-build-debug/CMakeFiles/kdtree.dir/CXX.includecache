@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/karl/Data/Git/kdtree/cmake-build-debug/tree.cpp
+
+/home/karl/Data/Git/kdtree/kdtree.cpp
+kdtree.h
+/home/karl/Data/Git/kdtree/kdtree.h
+cstdlib
+-
+iostream
+-
+
+/home/karl/Data/Git/kdtree/kdtree.h
+
+/home/karl/Data/Git/kdtree/main.cpp
+iostream
+-
+kdtree.h
+/home/karl/Data/Git/kdtree/kdtree.h
+
