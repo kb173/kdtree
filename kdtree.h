@@ -7,8 +7,9 @@
 
 class kdtree {
 private:
-    const static int dimension = 2;
+    const static int dimension = 2; // Used for vectors, eg vector[dimension]
 
+    // NODE
     class node {
     public:
         int *p;
@@ -29,7 +30,24 @@ private:
         }
     };
 
+    // RECT
+    class rect {
+    public:
+        int *origin, *end;
+
+        rect (){ // Initialize origin and size vector to 0
+            origin = new int[dimension];
+            end = new int[dimension];
+
+            for (int i = 0; i < dimension; i++) {
+                origin[i] = 0;
+                end[i] = 0;
+            }
+        }
+    };
+
     node* root;
+    rect* bounds;
     node* insert_rec(node *root, int point[dimension], int depth);
 
 public:
