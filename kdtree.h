@@ -9,7 +9,7 @@ class kdtree {
 private:
     const static int dimension = 2; // Used for vectors, eg vector[dimension]
 
-    // NODE
+    // NODE CLASS
     class node {
     public:
         int *p;
@@ -17,37 +17,19 @@ private:
         node* left;
         node* right;
 
-        node (int *np, int ndim) { // Constructor for node without values left or right
-            p = new int[dimension];
-
-            for (int i = 0; i < dimension; i++) {
-                p[i] = np[i];
-            }
-
-            dim = ndim;
-            left = nullptr;
-            right = nullptr;
-        }
+        node (int *np, int ndim);
     };
 
-    // RECT
+    // RECT CLASS
     class rect {
     public:
         int *origin, *end;
 
-        rect (){ // Initialize origin and size vector to 0
-            origin = new int[dimension];
-            end = new int[dimension];
-
-            for (int i = 0; i < dimension; i++) {
-                origin[i] = 0;
-                end[i] = 0;
-            }
-        }
+        rect ();
     };
 
-    node* root;
-    rect* bounds;
+    node* root; // The first inserted value
+    rect* bounds; // The bounding box of the whole tree - Encompasses all points
     node* insert_rec(node *root, int point[dimension], int depth);
 
 public:
