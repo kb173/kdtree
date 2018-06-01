@@ -16,5 +16,21 @@ int main() {
     tree->insert(p3);
     tree->insert(p4);
 
+    int p5[2] = {1, 0};
+
+    int **result = tree->search(p5, 2);
+
+    for (int i = 0; i < 2; i++) {
+        cout << "Point found: ";
+
+        for (int d = 0; d < 2; d++) {
+            cout << result[i][d] << ", ";
+        }
+
+        cout << endl;
+    }
+
+    tree->print();
+
     return 0;
 }

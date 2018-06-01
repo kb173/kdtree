@@ -38,7 +38,7 @@ private:
     public:
         int *origin, radius;
 
-        circ ();
+        circ (int* orig, int rad);
     };
 
     // HEAP ENTRY CLASS
@@ -70,18 +70,23 @@ private:
     public:
         explicit point_heap(int a);
         bool add(int* p, int dist);
+        int get_worst_dist();
         int** get_points();
     };
 
     node* root; // The first inserted value
     rect* bounds; // The bounding box of the whole tree - Encompasses all points
     node* insert_rec(node *root, int point[dimension], int depth);
+    point_heap* search_rec(node *root, rect *current_bounds, point_heap *best, circ *c);
+    void print_rec(node *root, int depth);
 
 
 public:
     kdtree();
 
     void insert(int point[dimension]);
+    int **search(int *point, int amount);
+    void print();
 };
 
 
