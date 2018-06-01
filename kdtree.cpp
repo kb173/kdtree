@@ -11,7 +11,7 @@
 // CONSTRUCTORS AND FUNCTIONS FOR CHILD CLASSES
 
 kdtree::node::node(int *np, int ndim) { // Constructor for node without values left or right
-    p = new int[dimension];
+    p = new int[dimension]; // Deleted in destructor of tree
 
     for (int i = 0; i < dimension; i++) {
         p[i] = np[i]; // There it is
@@ -30,6 +30,22 @@ kdtree::rect::rect() { // Initialize origin and size vector to 0
         origin[i] = 0;
         end[i] = 0;
     }
+}
+
+void kdtree::rect::print() {
+    cout << "Origin: (";
+
+    for (int i = 0; i < dimension; i++) {
+        cout << origin[i] << ", ";
+    }
+
+    cout << ");  " << "End: (";
+
+    for (int i = 0; i < dimension; i++) {
+        cout << end[i] << ", ";
+    }
+
+    cout << ")" << endl;
 }
 
 kdtree::circ::circ(int *orig, int rad) {
@@ -85,7 +101,7 @@ int **kdtree::point_heap::get_points() {
 int kdtree::point_heap::get_worst_dist() {
     // Return infinity if heap is not full, worst distance if full
     if (heap.size() < amount)
-        return std::numeric_limits<int>::max();
+        return numeric_limits<int>::max();
 
     return heap.top().dist;
 }
@@ -103,7 +119,7 @@ kdtree::node* kdtree::insert_rec(kdtree::node *root, int *point, int depth) { //
     if (root == nullptr) { // Current node is null -> Create new node and return it (exit condition)
         cout << "Creating the node" << endl;
 
-        auto *tmp = new node(point, depth);
+        auto *tmp = new node(point, depth); // Deleted in destructor of tree
 
         return tmp;
     }
@@ -145,25 +161,57 @@ kdtree::search_rec(kdtree::node *root, kdtree::rect *current_bounds, kdtree::poi
     // Check on which side point is and continue search at better path
     bool is_left = c->origin[root->dim] < root->p[root->dim];
 
+    // Bound calculations
+    auto *new_bounds = new rect();
+
+    for (int i = 0; i < dimension; i++) { // Copy bounds
+        new_bounds->origin[i] = current_bounds->origin[i];
+        new_bounds->end[i] = current_bounds->end[i];
+    }
+
+    cout << endl;
+
     // TODO: Set intersect based on whether bound rect and circle overlap
 
     // Search the better side first and get updated circle
     if (is_left && root->left) {
-        search_rec(root->left, current_bounds, best, c);
+        cout << "Continuing left" << endl;
+        new_bounds->end[root->dim] = root->p[root->dim];
+        new_bounds->print();
+
+        search_rec(root->left, new_bounds, best, c);
     } else if (!is_left && root->right){
-        search_rec(root->right, current_bounds, best, c);
+        cout << "Continuing right" << endl;
+        new_bounds->origin[root->dim] = root->p[root->dim];
+        new_bounds->print();
+
+        search_rec(root->right, new_bounds, best, c);
     }
 
     // Check for intersection on the worse side and search there if there was an intersection
     bool intersect = true;
 
+
+
     if (intersect) {
         if (is_left && root->right) {
-            search_rec(root->right, current_bounds, best, c);
+            cout << "Continuing right" << endl;
+            new_bounds->origin[root->dim] = root->p[root->dim];
+            new_bounds->print();
+
+            search_rec(root->right, new_bounds, best, c);
         } else if (!is_left && root->left){
-            search_rec(root->left, current_bounds, best, c);
+            cout << "Continuing left" << endl;
+            new_bounds->end[root->dim] = root->p[root->dim];
+            new_bounds->print();
+
+            search_rec(root->left, new_bounds, best, c);
         }
     }
+
+    delete new_bounds->origin;
+    delete new_bounds->end;
+    delete new_bounds;
 
     return best; // Exit condition: No node was either on the good side or intersected
 }
@@ -191,7 +239,7 @@ void kdtree::print_rec(kdtree::node *root, int depth) {
 
 kdtree::kdtree() { // Initialize root and bounds
     root = nullptr;
-    bounds = new rect();
+    bounds = new rect(); // Deleted in destructor of tree
 }
 
 void kdtree::insert(int *point) {
@@ -239,4 +287,27 @@ void kdtree::print() {
     print_rec(root, 0);
 
     cout << "-----------------------------------" << endl;
+}
+
+kdtree::~kdtree() {
+    // Delete nodes
+    del_rec(root);
+
+    // Delete bounds
+    delete bounds->origin;
+    delete bounds->end;
+    delete bounds;
+}
+
+void kdtree::del_rec(kdtree::node *root) {
+    if (root->left) {
+        del_rec(root->left);
+    }
+
+    if (root->right) {
+        del_rec(root->right);
+    }
+
+    delete root->p;
+    delete root;
 }

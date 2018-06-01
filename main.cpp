@@ -8,7 +8,7 @@ int main() {
 
     int p1[2] = {2, 2}; // x
     int p2[2] = {1, 1}; // y
-    int p3[2] = {3, 1}; // x
+    int p3[2] = {3, 3}; // x
     int p4[2] = {4, -1};// y
 
     tree->insert(p1);

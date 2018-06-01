@@ -31,6 +31,7 @@ private:
         int *origin, *end;
 
         rect ();
+        void print ();
     };
 
     // CIRCLE CLASS
@@ -79,10 +80,12 @@ private:
     node* insert_rec(node *root, int point[dimension], int depth);
     point_heap* search_rec(node *root, rect *current_bounds, point_heap *best, circ *c);
     void print_rec(node *root, int depth);
+    void del_rec(node *root);
 
 
 public:
     kdtree();
+    ~kdtree();
 
     void insert(int point[dimension]);
     int **search(int *point, int amount);
