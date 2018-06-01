@@ -2,6 +2,11 @@
 // Created by karl on 31.05.18.
 //
 
+#include <cstdlib>
+#include <queue>
+
+using namespace std;
+
 #ifndef KDTREE_KDTREE_H
 #define KDTREE_KDTREE_H
 
@@ -28,9 +33,50 @@ private:
         rect ();
     };
 
+    // CIRCLE CLASS
+    class circ {
+    public:
+        int *origin, radius;
+
+        circ ();
+    };
+
+    // HEAP ENTRY CLASS
+
+
+    // HEAP CLASS
+    class point_heap {
+    private:
+        class heap_point {
+        public:
+            int *point;
+            int dist;
+
+            heap_point(int* p, int d);
+        };
+
+        // Lambda expression for comparing in priority queue
+        struct compare
+        {
+            bool operator()(const heap_point p1, const heap_point p2)
+            {
+                return p1.dist < p2.dist;
+            }
+        };
+
+
+        priority_queue<heap_point, vector<heap_point>, compare> heap;
+        int amount;
+    public:
+        explicit point_heap(int a);
+        bool add(int* p, int dist);
+        int** get_points();
+    };
+
     node* root; // The first inserted value
     rect* bounds; // The bounding box of the whole tree - Encompasses all points
     node* insert_rec(node *root, int point[dimension], int depth);
+
 
 public:
     kdtree();

@@ -30,6 +30,12 @@ kdtree::rect::rect() { // Initialize origin and size vector to 0
     }
 }
 
+kdtree::circ::circ() {
+    origin = nullptr;
+    radius = 0;
+}
+
+
 // PRIVATE FUNCTIONS
 
 kdtree::node* kdtree::insert_rec(kdtree::node *root, int *point, int depth) { // Recursively insert a new point into the tree
@@ -64,6 +70,9 @@ kdtree::kdtree() { // Initialize root and bounds
 
 void kdtree::insert(int *point) {
     if (root == nullptr) { // Set bounds to just this point if it is the first inserted point
+        bounds->origin = new int[dimension]();
+        bounds->end = new int[dimension]();
+
         for (int i = 0; i < dimension; i++) {
             bounds->origin[i] = point[i];
             bounds->end[i] = point[i];
@@ -84,4 +93,43 @@ void kdtree::insert(int *point) {
     std::cout << "Insert successful!" << std::endl;
     std::cout << "New bounds: ("<< bounds->origin[0] << ", " << bounds->origin[1] << ") ";
     std::cout << "(" << bounds->end[0] << ", " << bounds->end[1] << ") " << std::endl;
+}
+
+kdtree::point_heap::heap_point::heap_point(int *p, int d) {
+    *point = *p;
+    dist = d;
+}
+
+kdtree::point_heap::point_heap(int a) {
+    amount = a;
+}
+
+bool kdtree::point_heap::add(int *p, int dist) {
+    if (heap.size() < amount) { // Heap is not full yet, so insert regardless of points in heap
+        heap.push(heap_point(p, dist));
+        return true;
+    }
+
+    if (heap.top().dist > dist) { // Distance of new point is smaller than distance of furthest point in heap
+        heap.pop();
+        heap.push(heap_point(p, dist));
+        return true;
+    }
+
+    return false; // Heap is full and dist of new point is greater than dist of furthest point in heap
+}
+
+int **kdtree::point_heap::get_points() {
+    auto **pts = new int*[amount];
+    int current = 0;
+
+    while (!heap.empty()) {
+        pts[current] = new int[dimension];
+        pts[current] = heap.top().point;
+        heap.pop();
+
+        current++;
+    }
+
+    return pts;
 }
