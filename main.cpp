@@ -1,7 +1,8 @@
 #include <iostream>
 #include "kdtree.h"
 
-int main() {
+int main()
+{
     std::cout << "Hello, World!" << std::endl;
 
     auto *tree = new kdtree();
@@ -20,10 +21,12 @@ int main() {
 
     int **result = tree->search(p5, 2);
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 2; i++)
+    {
         cout << "Point found: ";
 
-        for (int d = 0; d < 2; d++) {
+        for (int d = 0; d < 2; d++)
+        {
             cout << result[i][d] << ", ";
         }
 
