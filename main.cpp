@@ -7,19 +7,19 @@ int main()
 
     auto *tree = new kdtree();
 
-    int p1[2] = {2, 2}; // x
-    int p2[2] = {1, 1}; // y
-    int p3[2] = {3, 3}; // x
-    int p4[2] = {4, -1};// y
+    double p1[2] = {2.5, 2}; // x
+    double p2[2] = {1, 1}; // y
+    double p3[2] = {3, 3}; // x
+    double p4[2] = {4, -1};// y
 
     tree->insert(p1);
     tree->insert(p2);
     tree->insert(p3);
     tree->insert(p4);
 
-    int p5[2] = {1, 0};
+    double p5[2] = {3, 4};
 
-    int **result = tree->search(p5, 2);
+    double **result = tree->search(p5, 2);
 
     for (int i = 0; i < 2; i++)
     {

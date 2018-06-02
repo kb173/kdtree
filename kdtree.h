@@ -19,19 +19,19 @@ private:
     class node
     {
     public:
-        int *p;
+        double *p;
         int dim;
         node *left;
         node *right;
 
-        node(int *np, int ndim);
+        node(double *np, int ndim);
     };
 
     // RECT CLASS
     class rect
     {
     public:
-        int *origin, *end;
+        double *origin, *end;
 
         rect();
 
@@ -42,9 +42,9 @@ private:
     class circ
     {
     public:
-        int *origin, radius;
+        double *origin, radius;
 
-        circ(int *orig, int rad);
+        circ(double *orig, double rad);
     };
 
     // HEAP ENTRY CLASS
@@ -57,10 +57,10 @@ private:
         class heap_point
         {
         public:
-            int *point;
-            int dist;
+            double *point;
+            double dist;
 
-            heap_point(int *p, int d);
+            heap_point(double *p, double d);
         };
 
         // Lambda expression for comparing in priority queue
@@ -78,20 +78,20 @@ private:
     public:
         explicit point_heap(int a);
 
-        bool add(int *p, int dist);
+        bool add(double *p, double dist);
 
-        int get_worst_dist();
+        double get_worst_dist();
 
-        int **get_points();
+        double **get_points();
     };
 
     node *root; // The first inserted value
     rect *bounds; // The bounding box of the whole tree - Encompasses all points
-    node *insert_rec(node *root, int point[dimension], int depth);
+    node *insert_rec(node *root, double point[dimension], int depth);
 
     point_heap *search_rec(node *root, rect *current_bounds, point_heap *best, circ *c);
 
-    int get_distance(int *p1, int *p2);
+    double get_distance(double *p1, double *p2);
 
     void print_rec(node *root, int depth);
 
@@ -105,9 +105,9 @@ public:
 
     ~kdtree();
 
-    void insert(int point[dimension]);
+    void insert(double point[dimension]);
 
-    int **search(int *point, int amount);
+    double **search(double *point, int amount);
 
     void print();
 };

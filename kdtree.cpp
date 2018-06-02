@@ -10,9 +10,9 @@
 
 // CONSTRUCTORS AND FUNCTIONS FOR CHILD CLASSES
 
-kdtree::node::node(int *np, int ndim)
+kdtree::node::node(double *np, int ndim)
 { // Constructor for node without values left or right
-    p = new int[dimension]; // Deleted in destructor of tree
+    p = new double[dimension]; // Deleted in destructor of tree
 
     for (int i = 0; i < dimension; i++)
     {
@@ -26,8 +26,8 @@ kdtree::node::node(int *np, int ndim)
 
 kdtree::rect::rect()
 { // Initialize origin and size vector to 0
-    origin = new int[dimension];
-    end = new int[dimension];
+    origin = new double[dimension];
+    end = new double[dimension];
 
     for (int i = 0; i < dimension; i++)
     {
@@ -55,15 +55,15 @@ void kdtree::rect::print()
     cout << ")" << endl;
 }
 
-kdtree::circ::circ(int *orig, int rad)
+kdtree::circ::circ(double *orig, double rad)
 {
     origin = orig;
     radius = rad;
 }
 
-kdtree::point_heap::heap_point::heap_point(int *p, int d)
+kdtree::point_heap::heap_point::heap_point(double *p, double d)
 {
-    point = new int[dimension];
+    point = new double[dimension];
 
     for (int i = 0; i < dimension; i++)
     {
@@ -78,7 +78,7 @@ kdtree::point_heap::point_heap(int a)
     amount = a;
 }
 
-bool kdtree::point_heap::add(int *p, int dist)
+bool kdtree::point_heap::add(double *p, double dist)
 {
     if (heap.size() < amount)
     { // Heap is not full yet, so insert regardless of points in heap
@@ -96,14 +96,14 @@ bool kdtree::point_heap::add(int *p, int dist)
     return false; // Heap is full and dist of new point is greater than dist of furthest point in heap
 }
 
-int **kdtree::point_heap::get_points()
+double **kdtree::point_heap::get_points()
 {
-    auto **pts = new int *[amount];
+    auto **pts = new double *[amount];
     int current = 0;
 
     while (!heap.empty())
     {
-        pts[current] = new int[dimension];
+        pts[current] = new double[dimension];
         pts[current] = heap.top().point;
 
         heap.pop();
@@ -114,11 +114,11 @@ int **kdtree::point_heap::get_points()
     return pts;
 }
 
-int kdtree::point_heap::get_worst_dist()
+double kdtree::point_heap::get_worst_dist()
 {
     // Return infinity if heap is not full, worst distance if full
     if (heap.size() < amount)
-        return numeric_limits<int>::max();
+        return numeric_limits<double>::max();
 
     return heap.top().dist;
 }
@@ -127,7 +127,7 @@ int kdtree::point_heap::get_worst_dist()
 
 // PRIVATE FUNCTIONS
 
-kdtree::node *kdtree::insert_rec(kdtree::node *root, int *point, int depth)
+kdtree::node *kdtree::insert_rec(kdtree::node *root, double *point, int depth)
 { // Recursively insert a new point
     cout << "Inserting " << point[0] << ", " << point[1] << endl;
 
@@ -164,7 +164,7 @@ kdtree::search_rec(kdtree::node *root, kdtree::rect *current_bounds, kdtree::poi
 {
     cout << "Searching at node: " << root->p[0] << ", " << root->p[1] << endl;
 
-    int dist = get_distance(root->p, c->origin); // Distance between current point and point we're searching for
+    double dist = get_distance(root->p, c->origin); // Distance between current point and point we're searching for
 
     // Try inserting point into heap (true if heap is not full or point is better than worst point in heap)
     if (best->add(root->p, dist))
@@ -282,7 +282,7 @@ void kdtree::del_rec(kdtree::node *root)
 bool kdtree::intersect(kdtree::rect *r, kdtree::circ *c)
 {
     // Get closest point within rectangle to circle
-    auto *clamped = new int[dimension];
+    auto *clamped = new double[dimension];
 
     for (int i = 0; i < dimension; i++)
     {
@@ -299,23 +299,23 @@ bool kdtree::intersect(kdtree::rect *r, kdtree::circ *c)
         }
     }
 
-    int dist = get_distance(clamped, c->origin);
+    double dist = get_distance(clamped, c->origin);
 
     // If distance is smaller than the circle radius, that means they're intersecting
     return dist < c->radius;
 }
 
-int kdtree::get_distance(int *p1, int *p2)
+double kdtree::get_distance(double *p1, double *p2)
 {
     // Pythagoras
-    int squared_sum = 0;
+    double squared_sum = 0;
 
     for (int i = 0; i < dimension; i++)
     {
         squared_sum += pow(p1[i] - p2[i], 2);
     }
 
-    return (int) sqrt((double) squared_sum);
+    return sqrt(squared_sum);
 }
 
 // PUBLIC FUNCTIONS
@@ -326,13 +326,13 @@ kdtree::kdtree()
     bounds = new rect(); // Deleted in destructor of tree
 }
 
-void kdtree::insert(int *point)
+void kdtree::insert(double *point)
 {
     // Handle how the overall bounds change due to this new point
     if (root == nullptr)
     { // Set bounds to just this point if it is the first inserted point
-        bounds->origin = new int[dimension]();
-        bounds->end = new int[dimension]();
+        bounds->origin = new double[dimension]();
+        bounds->end = new double[dimension]();
 
         for (int i = 0; i < dimension; i++)
         {
@@ -361,13 +361,13 @@ void kdtree::insert(int *point)
     std::cout << "(" << bounds->end[0] << ", " << bounds->end[1] << ") " << std::endl;
 }
 
-int **kdtree::search(int *point, int amount)
+double **kdtree::search(double *point, int amount)
 {
     // Priority queue which holds the found points
     auto heap = new point_heap(amount);
 
     // Radius of circle is infinite as long as heap is not full
-    auto circle = new circ(point, std::numeric_limits<int>::max());
+    auto circle = new circ(point, std::numeric_limits<double>::max());
 
     point_heap *result = search_rec(root, bounds, heap, circle);
 
