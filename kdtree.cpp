@@ -26,8 +26,8 @@ kdtree::node::node(double *np, int ndim)
 
 kdtree::rect::rect()
 { // Initialize origin and size vector to 0
-    origin = new double[dimension];
-    end = new double[dimension];
+    origin = new double[dimension]; // Deleted in destructor
+    end = new double[dimension]; // Deleted in destructor
 
     for (int i = 0; i < dimension; i++)
     {
@@ -55,15 +55,28 @@ void kdtree::rect::print()
     cout << ")" << endl;
 }
 
+kdtree::rect::~rect()
+{
+    delete origin;
+    delete end;
+    delete this;
+}
+
 kdtree::circ::circ(double *orig, double rad)
 {
     origin = orig;
     radius = rad;
 }
 
+kdtree::circ::~circ()
+{
+    delete origin;
+    delete this;
+}
+
 kdtree::point_heap::heap_point::heap_point(double *p, double d)
 {
-    point = new double[dimension];
+    point = new double[dimension]; // Deleted in destructor
 
     for (int i = 0; i < dimension; i++)
     {
@@ -71,6 +84,10 @@ kdtree::point_heap::heap_point::heap_point(double *p, double d)
     }
 
     dist = d;
+}
+
+kdtree::point_heap::heap_point::~heap_point()
+{
 }
 
 kdtree::point_heap::point_heap(int a)
@@ -98,7 +115,7 @@ bool kdtree::point_heap::add(double *p, double dist)
 
 double **kdtree::point_heap::get_points()
 {
-    auto **pts = new double *[amount];
+    auto **pts = new double *[amount]; // Needs to be deleted manually!
     int current = 0;
 
     while (!heap.empty())
@@ -175,7 +192,7 @@ void kdtree::search_rec(kdtree::node *root, kdtree::rect *current_bounds, kdtree
     bool is_left = c->origin[root->dim] < root->p[root->dim];
 
     // Get bounds for both sides
-    auto *left_bounds = new rect();
+    auto *left_bounds = new rect(); // Both deleted by destructor
     auto *right_bounds = new rect();
 
     for (int i = 0; i < dimension; i++) // Copy old bounds into new ones first
@@ -226,15 +243,6 @@ void kdtree::search_rec(kdtree::node *root, kdtree::rect *current_bounds, kdtree
         }
     }
 
-    // The deeper functions are done so we don't need their bounds anymore
-    delete left_bounds->origin;
-    delete left_bounds->end;
-    delete left_bounds;
-
-    delete right_bounds->origin;
-    delete right_bounds->end;
-    delete right_bounds;
-
     // Exit condition: No node was either on the good side or intersected
 }
 
@@ -280,7 +288,7 @@ void kdtree::del_rec(kdtree::node *root)
 bool kdtree::intersect(kdtree::rect *r, kdtree::circ *c)
 {
     // Get closest point within rectangle to circle
-    auto *clamped = new double[dimension];
+    auto *clamped = new double[dimension]; // Deleted below
 
     for (int i = 0; i < dimension; i++)
     {
@@ -298,6 +306,8 @@ bool kdtree::intersect(kdtree::rect *r, kdtree::circ *c)
     }
 
     double dist = get_distance(clamped, c->origin);
+
+    delete clamped;
 
     // If distance is smaller than the circle radius, that means they're intersecting
     return dist < c->radius;
@@ -329,7 +339,7 @@ void kdtree::insert(double *point)
     // Handle how the overall bounds change due to this new point
     if (root == nullptr)
     { // Set bounds to just this point if it is the first inserted point
-        bounds->origin = new double[dimension]();
+        bounds->origin = new double[dimension](); // Both deleted in destructor of tree
         bounds->end = new double[dimension]();
 
         for (int i = 0; i < dimension; i++)
@@ -362,14 +372,18 @@ void kdtree::insert(double *point)
 double **kdtree::search(double *point, int amount)
 {
     // Priority queue which holds the found points
-    auto heap = new point_heap(amount);
+    auto heap = new point_heap(amount); // Deleted below
 
     // Radius of circle is infinite as long as heap is not full
     auto circle = new circ(point, std::numeric_limits<double>::max());
 
     search_rec(root, bounds, heap, circle);
 
-    return heap->get_points();
+    double **pts = heap->get_points();
+
+    delete heap;
+
+    return pts;
 }
 
 void kdtree::print()

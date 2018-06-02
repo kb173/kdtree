@@ -34,6 +34,7 @@ private:
         double *origin, *end;
 
         rect();
+        ~rect();
 
         void print();
     };
@@ -45,6 +46,7 @@ private:
         double *origin, radius;
 
         circ(double *orig, double rad);
+        ~circ();
     };
 
     // HEAP ENTRY CLASS
@@ -61,6 +63,7 @@ private:
             double dist;
 
             heap_point(double *p, double d);
+            ~heap_point();
         };
 
         // Lambda expression for comparing in priority queue
