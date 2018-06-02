@@ -159,8 +159,7 @@ kdtree::node *kdtree::insert_rec(kdtree::node *root, double *point, int depth)
     return root;
 }
 
-kdtree::point_heap *
-kdtree::search_rec(kdtree::node *root, kdtree::rect *current_bounds, kdtree::point_heap *best, kdtree::circ *c)
+void kdtree::search_rec(kdtree::node *root, kdtree::rect *current_bounds, kdtree::point_heap *best, kdtree::circ *c)
 {
     cout << "Searching at node: " << root->p[0] << ", " << root->p[1] << endl;
 
@@ -236,8 +235,7 @@ kdtree::search_rec(kdtree::node *root, kdtree::rect *current_bounds, kdtree::poi
     delete right_bounds->end;
     delete right_bounds;
 
-    // TODO: Change return type, best is a pointer anyways
-    return best; // Exit condition: No node was either on the good side or intersected
+    // Exit condition: No node was either on the good side or intersected
 }
 
 void kdtree::print_rec(kdtree::node *root, int depth)
@@ -369,9 +367,9 @@ double **kdtree::search(double *point, int amount)
     // Radius of circle is infinite as long as heap is not full
     auto circle = new circ(point, std::numeric_limits<double>::max());
 
-    point_heap *result = search_rec(root, bounds, heap, circle);
+    search_rec(root, bounds, heap, circle);
 
-    return result->get_points();
+    return heap->get_points();
 }
 
 void kdtree::print()
