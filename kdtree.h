@@ -92,7 +92,7 @@ private:
     rect *bounds; // The bounding box of the whole tree - Encompasses all points
     node *insert_rec(node *root, double point[dimension], int depth);
 
-    void search_rec(node *root, rect *current_bounds, point_heap *best, circ *c);
+    bool search_rec(node *root, rect *current_bounds, point_heap *best, circ *c);
 
     double get_distance(double *p1, double *p2);
 

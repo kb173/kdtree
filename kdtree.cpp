@@ -176,7 +176,7 @@ kdtree::node *kdtree::insert_rec(kdtree::node *root, double *point, int depth)
     return root;
 }
 
-void kdtree::search_rec(kdtree::node *root, kdtree::rect *current_bounds, kdtree::point_heap *best, kdtree::circ *c)
+bool kdtree::search_rec(kdtree::node *root, kdtree::rect *current_bounds, kdtree::point_heap *best, kdtree::circ *c)
 {
     cout << "Searching at node: " << root->p[0] << ", " << root->p[1] << endl;
 
@@ -218,32 +218,38 @@ void kdtree::search_rec(kdtree::node *root, kdtree::rect *current_bounds, kdtree
     // We need to go deeper
     if (is_left) // Searchpoint is on the left of current axis
     {
+        // If the good path encloses all possible points, this becomes true and the worse path is not checked
+        bool done = false;
+
         // Search at the obvious route first
         if (root->left)
         {
-            search_rec(root->left, left_bounds, best, c);
+            done = search_rec(root->left, left_bounds, best, c);
         }
 
         // Also search the other side if the bounds overlap with the search circle
-        if (root->right && intersect(right_bounds, c))
+        if (!done && root->right && intersect(right_bounds, c))
         {
             search_rec(root->right, right_bounds, best, c);
         }
     } else
     {
         // Same thing for the right side
+        bool done = false;
+
         if (root->right)
         {
-            search_rec(root->right, right_bounds, best, c);
+            done = search_rec(root->right, right_bounds, best, c);
         }
 
-        if (root->left && intersect(left_bounds, c))
+        if (!done && root->left && intersect(left_bounds, c))
         {
             search_rec(root->left, left_bounds, best, c);
         }
     }
 
     // Exit condition: No node was either on the good side or intersected
+    return within(current_bounds, c);
 }
 
 void kdtree::print_rec(kdtree::node *root, int depth)
