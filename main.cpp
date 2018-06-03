@@ -2,6 +2,43 @@
 #include <fstream>
 #include "kdtree.h"
 
+/*
+int main()
+{
+    auto *tree = new kdtree();
+
+    double points[6][2] = {{600, 600}, {300, 0}, {300, 0}, {-200, 150}, {10, 50}, {100, 50}};
+
+    for (int i = 0; i < 6; i++)
+    {
+        tree->insert(points[i]);
+    }
+
+    tree->print();
+
+    double search_point[2] = {110, 400};
+
+    double **result = new double*[3];
+
+    for (int i = 0; i < 2; i++)
+    {
+        result[i] = new double[2];
+    }
+
+    result = tree->search(search_point, 3);
+
+    for (int i = 0; i < 3; i++)
+    {
+        cout << "Point found: ";
+
+        for (int d = 0; d < 2; d++)
+        {
+            cout << result[i][d] << ", ";
+        }
+
+        cout << endl;
+    }}
+*/
 
 int main(int argc, char *argv[]) {
 
@@ -20,7 +57,7 @@ int main(int argc, char *argv[]) {
 
     int length;
     double number;
-    file >> number;
+    file >> length;
 
     double points[length][2];
 
@@ -33,6 +70,7 @@ int main(int argc, char *argv[]) {
         } else{
             points[count][1] = number;
             isx = !isx;
+            count++;
         }
     }
 
@@ -77,7 +115,6 @@ int main(int argc, char *argv[]) {
         {
             cout << result[i][d] << ", ";
         }
-
         cout << endl;
     }
 
