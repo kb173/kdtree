@@ -160,6 +160,25 @@ kdtree::node *kdtree::insert_rec(kdtree::node *root, double *point, int depth)
         return tmp;
     }
 
+    // Check if identical point is already in the tree, don't insert if so
+    bool identical = true;
+
+    for (int i = 0; i < dimension; i++)
+    {
+        if (root->p[i] != point[i])
+        {
+            identical = false;
+            break;
+        }
+    }
+
+    if (identical)
+    {
+        cout << "Identical point already exists, aborting" << endl;
+        print();
+        return root;
+    }
+
     // Insert the new node left or right of the current node, based on the value at the current check dimension
     if (point[current_dim] > root->p[current_dim])
     {

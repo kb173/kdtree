@@ -45,7 +45,7 @@ int main()
 {
     auto *tree = new kdtree();
 
-    double points[6][2] = {{250, 200}, {300, 100}, {300, 300}, {400, -100}, {100, 50}, {-200, -20}};
+    double points[6][2] = {{250, 200}, {300, 100}, {300, 300}, {200, 50}, {100, 50}, {100, 50}};
 
 
     for (int i = 0; i < 6; i++)
@@ -53,7 +53,7 @@ int main()
         tree->insert(points[i]);
     }
 
-    double search_point[2] = {3, 4};
+    double search_point[2] = {30, 400};
 
     double **result = tree->search(search_point, 3);
 
