@@ -227,11 +227,16 @@ bool kdtree::search_rec(kdtree::node *root, kdtree::rect *current_bounds, kdtree
     left_bounds->end[root->dim] = root->p[root->dim];
     right_bounds->origin[root->dim] = root->p[root->dim];
 
+    cout << "Overall bounds: " << endl;
+    current_bounds->print();
+
     cout << "Left bounds: " << endl;
     left_bounds->print();
 
     cout << "Right bounds: " << endl;
     right_bounds->print();
+
+    cout << "Radius: " << c->radius << endl;
 
 
     // We need to go deeper
@@ -244,6 +249,11 @@ bool kdtree::search_rec(kdtree::node *root, kdtree::rect *current_bounds, kdtree
         if (root->left)
         {
             done = search_rec(root->left, left_bounds, best, c);
+        }
+
+        if (done)
+        {
+            cout << "Overlap - we're done!" << endl;
         }
 
         // Also search the other side if the bounds overlap with the search circle
@@ -259,6 +269,11 @@ bool kdtree::search_rec(kdtree::node *root, kdtree::rect *current_bounds, kdtree
         if (root->right)
         {
             done = search_rec(root->right, right_bounds, best, c);
+        }
+
+        if (done)
+        {
+            cout << "Overlap - we're done!" << endl;
         }
 
         if (!done && root->left && intersect(left_bounds, c))
@@ -342,12 +357,12 @@ bool kdtree::within(kdtree::rect *r, kdtree::circ *c)
 {
     // Check if closest point within circle to rectangle is within the rectangle
     for (int i = 0; i < dimension; i++) {
-        if (r->origin[i] >= c->origin[i] + c->radius) // ex: |c->origin   |+radius      |r->origin
+        if (r->origin[i] > c->origin[i] - c->radius) // ex: |-radius   |r->origin   |c->origin
         {
             return false;
         }
 
-        if (r->end[i] <= c->origin[i] - c->radius) // ex: |r->end     |-radius     |c->origin
+        if (r->end[i] < c->origin[i] + c->radius) // ex: |c->origin   |r->end    |+radius
         {
             return false;
         }

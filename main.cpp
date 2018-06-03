@@ -45,7 +45,7 @@ int main()
 {
     auto *tree = new kdtree();
 
-    double points[6][2] = {{250, 200}, {300, 100}, {300, 300}, {-200, 50}, {100, 50}, {100, 50}};
+    double points[6][2] = {{250, 200}, {300, 100}, {350, 300}, {-200, 150}, {100, 50}, {100, 50}};
 
 
     for (int i = 0; i < 6; i++)
@@ -56,6 +56,18 @@ int main()
     double search_point[2] = {110, 400};
 
     double **result = tree->search(search_point, 3);
+
+    for (int i = 0; i < 3; i++)
+    {
+        cout << "Point found: ";
+
+        for (int d = 0; d < 2; d++)
+        {
+            cout << result[i][d] << ", ";
+        }
+
+        cout << endl;
+    }
 
     // create the window
     sf::RenderWindow window(sf::VideoMode(1440, 1440), "k-d-tree");
