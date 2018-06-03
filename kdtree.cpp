@@ -313,6 +313,24 @@ bool kdtree::intersect(kdtree::rect *r, kdtree::circ *c)
     return dist < c->radius;
 }
 
+bool kdtree::within(kdtree::rect *r, kdtree::circ *c)
+{
+    // Check if closest point within circle to rectangle is within the rectangle
+    for (int i = 0; i < dimension; i++) {
+        if (r->origin[i] >= c->origin[i] + c->radius) // ex: |c->origin   |+radius      |r->origin
+        {
+            return false;
+        }
+
+        if (r->end[i] <= c->origin[i] - c->radius) // ex: |r->end     |-radius     |c->origin
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 double kdtree::get_distance(double *p1, double *p2)
 {
     // Pythagoras

@@ -102,6 +102,8 @@ private:
 
     bool intersect(rect *r, circ *c);
 
+    bool within(rect *r, circ*c);
+
 
 public:
     kdtree();
