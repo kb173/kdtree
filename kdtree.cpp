@@ -146,14 +146,14 @@ double kdtree::point_heap::get_worst_dist()
 
 kdtree::node *kdtree::insert_rec(kdtree::node *root, double *point, int depth)
 { // Recursively insert a new point
-    cout << "Inserting " << point[0] << ", " << point[1] << endl;
+    // cout << "Inserting " << point[0] << ", " << point[1] << endl;
 
     // Get current dimension based on depth; should go from 0 to dimension, then loop back to 0
     int current_dim = depth % dimension;
 
     if (root == nullptr)
     { // Current node is null -> Create new node and return it (exit condition)
-        cout << "Creating the node" << endl;
+        // cout << "Creating the node" << endl;
 
         auto *tmp = new node(point, depth); // Deleted in destructor of tree
 
@@ -174,7 +174,7 @@ kdtree::node *kdtree::insert_rec(kdtree::node *root, double *point, int depth)
 
     if (identical)
     {
-        cout << "Identical point already exists, aborting" << endl;
+        // cout << "Identical point already exists, aborting" << endl;
         print();
         return root;
     }
@@ -182,12 +182,12 @@ kdtree::node *kdtree::insert_rec(kdtree::node *root, double *point, int depth)
     // Insert the new node left or right of the current node, based on the value at the current check dimension
     if (point[current_dim] > root->p[current_dim])
     {
-        std::cout << "Inserting right" << std::endl;
+        // std::cout << "Inserting right" << std::endl;
 
         root->right = insert_rec(root->right, point, ++depth);
     } else
     {
-        std::cout << "Inserting left" << std::endl;
+        // std::cout << "Inserting left" << std::endl;
 
         root->left = insert_rec(root->left, point, ++depth);
     }
@@ -197,7 +197,7 @@ kdtree::node *kdtree::insert_rec(kdtree::node *root, double *point, int depth)
 
 bool kdtree::search_rec(kdtree::node *root, kdtree::rect *current_bounds, kdtree::point_heap *best, kdtree::circ *c)
 {
-    cout << "Searching at node: " << root->p[0] << ", " << root->p[1] << endl;
+    // cout << "Searching at node: " << root->p[0] << ", " << root->p[1] << endl;
 
     double dist = get_distance(root->p, c->origin); // Distance between current point and point we're searching for
 
@@ -227,7 +227,7 @@ bool kdtree::search_rec(kdtree::node *root, kdtree::rect *current_bounds, kdtree
     left_bounds->end[root->dim] = root->p[root->dim];
     right_bounds->origin[root->dim] = root->p[root->dim];
 
-    cout << "Overall bounds: " << endl;
+    /*cout << "Overall bounds: " << endl;
     current_bounds->print();
 
     cout << "Left bounds: " << endl;
@@ -236,7 +236,7 @@ bool kdtree::search_rec(kdtree::node *root, kdtree::rect *current_bounds, kdtree
     cout << "Right bounds: " << endl;
     right_bounds->print();
 
-    cout << "Radius: " << c->radius << endl;
+    cout << "Radius: " << c->radius << endl;*/
 
 
     // We need to go deeper
@@ -251,10 +251,10 @@ bool kdtree::search_rec(kdtree::node *root, kdtree::rect *current_bounds, kdtree
             done = search_rec(root->left, left_bounds, best, c);
         }
 
-        if (done)
+/*        if (done)
         {
-            cout << "Overlap - we're done!" << endl;
-        }
+            // cout << "Overlap - we're done!" << endl;
+        }*/
 
         // Also search the other side if the bounds overlap with the search circle
         if (!done && root->right && intersect(right_bounds, c))
@@ -271,10 +271,10 @@ bool kdtree::search_rec(kdtree::node *root, kdtree::rect *current_bounds, kdtree
             done = search_rec(root->right, right_bounds, best, c);
         }
 
-        if (done)
+/*        if (done)
         {
             cout << "Overlap - we're done!" << endl;
-        }
+        }*/
 
         if (!done && root->left && intersect(left_bounds, c))
         {
@@ -421,10 +421,10 @@ void kdtree::insert(double *point)
 
     root = insert_rec(root, point, 0);
 
-    // Debug info
+    /*// Debug info
     std::cout << "Insert successful!" << std::endl;
     std::cout << "New bounds: (" << bounds->origin[0] << ", " << bounds->origin[1] << ") ";
-    std::cout << "(" << bounds->end[0] << ", " << bounds->end[1] << ") " << std::endl;
+    std::cout << "(" << bounds->end[0] << ", " << bounds->end[1] << ") " << std::endl;*/
 }
 
 double **kdtree::search(double *point, int amount)
@@ -433,7 +433,7 @@ double **kdtree::search(double *point, int amount)
     auto heap = new point_heap(amount); // Deleted below
 
     // Radius of circle is infinite as long as heap is not full
-    auto circle = new circ(point, std::numeric_limits<double>::max());
+    auto circle = new circ(point, std::numeric_limits<double>::max()); // Suicide in destructor
 
     search_rec(root, bounds, heap, circle);
 
