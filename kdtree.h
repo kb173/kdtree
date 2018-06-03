@@ -10,49 +10,60 @@ using namespace std;
 #ifndef KDTREE_KDTREE_H
 #define KDTREE_KDTREE_H
 
-class kdtree {
+class kdtree
+{
 private:
     const static int dimension = 2; // Used for vectors, eg vector[dimension]
 
     // NODE CLASS
-    class node {
+    class node
+    {
     public:
-        int *p;
+        double *p;
         int dim;
-        node* left;
-        node* right;
+        node *left;
+        node *right;
 
-        node (int *np, int ndim);
+        node(double *np, int ndim);
     };
 
     // RECT CLASS
-    class rect {
+    class rect
+    {
     public:
-        int *origin, *end;
+        double *origin, *end;
 
-        rect ();
+        rect();
+        ~rect();
+
+        void print();
     };
 
     // CIRCLE CLASS
-    class circ {
+    class circ
+    {
     public:
-        int *origin, radius;
+        double *origin, radius;
 
-        circ (int* orig, int rad);
+        circ(double *orig, double rad);
+        ~circ();
     };
 
     // HEAP ENTRY CLASS
 
 
     // HEAP CLASS
-    class point_heap {
+    class point_heap
+    {
     private:
-        class heap_point {
+        class heap_point
+        {
         public:
-            int *point;
-            int dist;
+            double *point;
+            double dist;
 
-            heap_point(int* p, int d);
+            heap_point(double *p, double d);
+            ~heap_point();
         };
 
         // Lambda expression for comparing in priority queue
@@ -69,23 +80,40 @@ private:
         int amount;
     public:
         explicit point_heap(int a);
-        bool add(int* p, int dist);
-        int get_worst_dist();
-        int** get_points();
+
+        bool add(double *p, double dist);
+
+        double get_worst_dist();
+
+        double **get_points();
     };
 
-    node* root; // The first inserted value
-    rect* bounds; // The bounding box of the whole tree - Encompasses all points
-    node* insert_rec(node *root, int point[dimension], int depth);
-    point_heap* search_rec(node *root, rect *current_bounds, point_heap *best, circ *c);
+    node *root; // The first inserted value
+    rect *bounds; // The bounding box of the whole tree - Encompasses all points
+    node *insert_rec(node *root, double point[dimension], int depth);
+
+    bool search_rec(node *root, rect *current_bounds, point_heap *best, circ *c);
+
+    double get_distance(double *p1, double *p2);
+
     void print_rec(node *root, int depth);
+
+    void del_rec(node *root);
+
+    bool intersect(rect *r, circ *c);
+
+    bool within(rect *r, circ*c);
 
 
 public:
     kdtree();
 
-    void insert(int point[dimension]);
-    int **search(int *point, int amount);
+    ~kdtree();
+
+    void insert(double point[dimension]);
+
+    double **search(double *point, int amount);
+
     void print();
 };
 

@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
     cin >> searchy;
 
     cout << "How many points do you want to search for in its surroundings" << endl;
-
+    
     cin >> amount;
 
     int searchpoint[2] = {searchx, searchy};
