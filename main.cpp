@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include "kdtree.h"
+
 
 int main(int argc, char *argv[]) {
 
@@ -14,33 +14,38 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-
     ifstream file;
     file.open(argv[1]);
 
-    int number;
-    bool isx;
 
-    int xvalue;
-    int yvalue;
-
+    int length;
+    double number;
     file >> number;
 
+    double points[length][2];
+
+    long count = 0;
+    bool isx = true;
     while (file >> number) {
         if(isx){
-            xvalue = number;
+            points[count][0] = number;
             isx = !isx;
         } else{
-            yvalue = number;
+            points[count][1] = number;
             isx = !isx;
-
-            int point[2] = {xvalue, yvalue};
-            tree->insert(point);
         }
     }
 
-    int searchx;
-    int searchy;
+    for (int i = 0; i < length; i++)
+    {
+        tree->insert(points[i]);
+    }
+
+    tree->print();
+
+
+    double searchx;
+    double searchy;
     int amount;
 
     cout << "Enter the point you want to search for: " << endl;
@@ -52,21 +57,29 @@ int main(int argc, char *argv[]) {
     
     cin >> amount;
 
-    int searchpoint[2] = {searchx, searchy};
-    int **result = tree->search(searchpoint, amount);
+
+    double search_point[2] = {searchx, searchy};
+    double **result = new double*[amount];
 
 
-    for (int i = 0; i < amount; i++) {
+    for (int i = 0; i < 2; i++)
+    {
+        result[i] = new double[2];
+    }
+
+    result = tree->search(search_point, amount);
+
+    for (int i = 0; i < amount; i++)
+    {
         cout << "Point found: ";
 
-        for (int d = 0; d < amount; d++) {
+        for (int d = 0; d < 2; d++)
+        {
             cout << result[i][d] << ", ";
         }
 
         cout << endl;
     }
-
-    tree->print();
 
     return 0;
 }
