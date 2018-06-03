@@ -45,7 +45,7 @@ int main()
 {
     auto *tree = new kdtree();
 
-    double points[6][2] = {{250, 200}, {300, 100}, {300, 300}, {200, 50}, {100, 50}, {100, 50}};
+    double points[6][2] = {{250, 200}, {300, 100}, {300, 300}, {-200, 50}, {100, 50}, {100, 50}};
 
 
     for (int i = 0; i < 6; i++)
@@ -53,7 +53,7 @@ int main()
         tree->insert(points[i]);
     }
 
-    double search_point[2] = {30, 400};
+    double search_point[2] = {110, 400};
 
     double **result = tree->search(search_point, 3);
 
@@ -89,16 +89,16 @@ int main()
         {
             sf::CircleShape normal_p(10);
             normal_p.setFillColor(sf::Color(250, 250, 250));
-            normal_p.setOrigin(-500 + points[i][0], -500 + points[i][1]);
+            normal_p.setPosition(500 + points[i][0], 500 + points[i][1]);
             window.draw(normal_p);
         }
 
-        search_p.setOrigin(-500 + search_point[0], -500 + search_point[1]);
+        search_p.setPosition(500 + search_point[0], 500 + search_point[1]);
         window.draw(search_p);
 
         for (int i = 0; i < 3; i++)
         {
-            found_p.setOrigin(-500 + result[i][0], -500 + result[i][1]);
+            found_p.setPosition(500 + result[i][0], 500 + result[i][1]);
             window.draw(found_p);
         }
 
