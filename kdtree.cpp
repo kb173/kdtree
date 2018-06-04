@@ -431,6 +431,7 @@ void kdtree::insert(double **points, int amount, int dim)
 
     auto *median = new double[dim];
 
+    // sets median the middle of the sorted array
     for (int i = 0; i < dimension; i++)
     {
         median[i] = points[amount / 2][i]; // Upper one maybe
@@ -470,6 +471,7 @@ void kdtree::insert(double **points, int amount, int dim)
         return;
     }
 
+    // values lower/higher than the median
     auto **lower = new double*[amount/2];
     auto **higher = new double*[amount/2];
 
@@ -481,6 +483,7 @@ void kdtree::insert(double **points, int amount, int dim)
 
     int start_val;
 
+    // sets lower and higher for even/odd amount of points
     if (amount % 2 == 0)
     {
         for (int i = 0; i < amount / 2; i++)
@@ -516,6 +519,7 @@ void kdtree::insert(double **points, int amount, int dim)
         }
     }
 
+    // median is inserted
     root = insert_rec(root, median, 0);
 
     dim = (dim + 1) % dimension;
