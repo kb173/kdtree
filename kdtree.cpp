@@ -419,7 +419,12 @@ void kdtree::insert(double *point)
         }
     }
 
-    root = insert_rec(root, point, 0);
+    // Median
+    root = insert_rec(root, point, 0); // Mit Median
+
+    // Daten links vom Median, rechts vom Median
+    // insert(links von Median)
+    // insert(rechts von Median)
 
     /*// Debug info
     std::cout << "Insert successful!" << std::endl;
