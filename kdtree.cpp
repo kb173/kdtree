@@ -533,6 +533,15 @@ void kdtree::insert(double **points, int amount, int dim)
 
     insert(lower, amount / 2, dim);
 
+    for (int i = 0; i < amount / 2; i++)
+    {
+        delete lower[i];
+        delete higher[i];
+    }
+
+    delete lower;
+    delete higher;
+
     /*// Debug info
     std::cout << "Insert successful!" << std::endl;
     std::cout << "New bounds: (" << bounds->origin[0] << ", " << bounds->origin[1] << ") ";
