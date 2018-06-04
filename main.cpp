@@ -1,5 +1,6 @@
 #include <iostream>
 #include "kdtree.h"
+#include <algorithm>
 
 /*int main()
 {
@@ -38,19 +39,44 @@
     return 0;
 }*/
 
-#include <SFML/Graphics.hpp>
+//#include <SFML/Graphics.hpp>
 
 
 int main()
 {
     auto *tree = new kdtree();
 
-    double points[6][2] = {{200, 200}, {-300, 0}, {300, 0}, {-200, -150}, {10, 50}, {-100, 50}};
+    int amount = 6;
 
+    auto **points = new double*[amount];
+
+    for(int i = 0; i<amount; i++){
+        points[i] = new double[2];
+    }
+
+    points[0][0] = 200;
+    points[1][0] = -300;
+    points[2][0] = 300;
+    points[3][0] = -200;
+    points[4][0] = 10;
+    points[5][0] = -100;
+
+    points[0][1] = 200;
+    points[1][1] = 0;
+    points[2][1] = 0;
+    points[3][1] = -150;
+    points[4][1] = 50;
+    points[5][1] = 50;
+
+  //  {{200, 200}, {-300, 0}, {300, 0}, {-200, -150}, {10, 50}, {-100, 50}};
+/*
     for (int i = 0; i < 6; i++)
     {
-        tree->insert(points[i]);
+        tree->insert(points, 6);
     }
+    */
+
+    tree->insert(points, amount, 0);
 
     tree->print();
 
@@ -76,6 +102,8 @@ int main()
 
         cout << endl;
     }
+
+    /*
 
     // create the window
     sf::RenderWindow window(sf::VideoMode(1440, 1440), "k-d-tree");
@@ -124,5 +152,6 @@ int main()
         window.display();
     }
 
+     */
     return 0;
 }

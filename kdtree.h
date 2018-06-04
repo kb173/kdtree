@@ -110,7 +110,7 @@ public:
 
     ~kdtree();
 
-    void insert(double point[dimension]);
+    void insert(double **points, int amount, int dim);
 
     double **search(double *point, int amount);
 

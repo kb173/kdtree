@@ -7,6 +7,7 @@
 #include <iostream>
 #include <cmath>
 #include <limits>
+#include <algorithm>
 
 // CONSTRUCTORS AND FUNCTIONS FOR CHILD CLASSES
 
@@ -175,7 +176,6 @@ kdtree::node *kdtree::insert_rec(kdtree::node *root, double *point, int depth)
     if (identical)
     {
         // cout << "Identical point already exists, aborting" << endl;
-        print();
         return root;
     }
 
@@ -392,8 +392,53 @@ kdtree::kdtree()
     bounds = new rect(); // Deleted in destructor of tree
 }
 
-void kdtree::insert(double *point)
+bool comp_x (double *p1, double *p2)
 {
+    if (p1[0] < p2[0])
+    {
+        return true;
+    } else
+    {
+        return false;
+    }
+}
+
+bool comp_y (double *p1, double *p2)
+{
+    if (p1[1] < p2[1])
+    {
+        return true;
+    } else
+    {
+        return false;
+    }
+}
+
+void kdtree::insert(double **points, int amount, int dim)
+{
+    if (amount == 0)
+    {
+        return;
+    }
+
+    if (dim == 0)
+    {
+        sort(points, points + amount, comp_x);
+    } else
+    {
+        sort(points, points + amount, comp_y);
+    }
+
+    auto *median = new double[dim];
+
+    for (int i = 0; i < dimension; i++)
+    {
+        median[i] = points[amount / 2][i]; // Upper one maybe
+    }
+
+    cout << "Amount: " << amount << endl;
+    cout << "Median: " << median[0] << ", " << median[1] << endl;
+
     // Handle how the overall bounds change due to this new point
     if (root == nullptr)
     { // Set bounds to just this point if it is the first inserted point
@@ -402,24 +447,87 @@ void kdtree::insert(double *point)
 
         for (int i = 0; i < dimension; i++)
         {
-            bounds->origin[i] = point[i];
-            bounds->end[i] = point[i];
+            bounds->origin[i] = median[i];
+            bounds->end[i] = median[i];
         }
     } else
     { // If it is not the first point, update bounds to match new point
         for (int i = 0; i < dimension; i++)
         {
-            if (point[i] < bounds->origin[i])
+            if (median[i] < bounds->origin[i])
             {
-                bounds->origin[i] = point[i];
-            } else if (point[i] > bounds->end[i])
+                bounds->origin[i] = median[i];
+            } else if (median[i] > bounds->end[i])
             {
-                bounds->end[i] = point[i];
+                bounds->end[i] = median[i];
             }
         }
     }
 
-    root = insert_rec(root, point, 0);
+    if (amount == 1)
+    {
+        root = insert_rec(root, median, 0);
+        return;
+    }
+
+    auto **lower = new double*[amount/2];
+    auto **higher = new double*[amount/2];
+
+    for (int i = 0; i < amount / 2; i++)
+    {
+        lower[i] = new double[dimension];
+        higher[i] = new double[dimension];
+    }
+
+    int start_val;
+
+    if (amount % 2 == 0)
+    {
+        for (int i = 0; i < amount / 2; i++)
+        {
+            for (int j = 0; j < dimension; j++)
+            {
+                lower[i][j] = points[i][j];
+            }
+        }
+
+        for (int i = 0; i < amount / 2 - 1; i++)
+        {
+            for (int j = 0; j < dimension; j++)
+            {
+                higher[i][j] = points[amount / 2 + 1 + i][j];
+            }
+        }
+    } else {
+        for (int i = 0; i < amount / 2; i++)
+        {
+            for (int j = 0; j < dimension; j++)
+            {
+                lower[i][j] = points[i][j];
+            }
+        }
+
+        for (int i = 0; i < amount / 2; i++)
+        {
+            for (int j = 0; j < dimension; j++)
+            {
+                higher[i][j] = points[amount / 2 + 1 + i][j];
+            }
+        }
+    }
+
+    root = insert_rec(root, median, 0);
+
+    dim = (dim + 1) % dimension;
+
+    if (amount % 2 == 0)
+    {
+        insert(higher, amount / 2 - 1, dim);
+    } else {
+        insert(higher, amount / 2, dim);
+    }
+
+    insert(lower, amount / 2, dim);
 
     /*// Debug info
     std::cout << "Insert successful!" << std::endl;
