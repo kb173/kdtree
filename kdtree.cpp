@@ -541,6 +541,7 @@ void kdtree::insert(double **points, int amount, int dim)
 
     delete lower;
     delete higher;
+    delete median;
 
     /*// Debug info
     std::cout << "Insert successful!" << std::endl;
