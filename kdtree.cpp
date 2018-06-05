@@ -119,6 +119,11 @@ double **kdtree::point_heap::get_points()
     auto **pts = new double *[amount]; // Needs to be deleted manually!
     int current = 0;
 
+    for (int i = 0; i < amount; i++) // Fill with nullptrs in case we find less than amount
+    {
+        pts[i] = nullptr;
+    }
+
     while (!heap.empty())
     {
         pts[current] = new double[dimension];
@@ -429,7 +434,7 @@ void kdtree::insert(double **points, int amount, int dim)
         sort(points, points + amount, comp_y);
     }
 
-    auto *median = new double[dim];
+    auto *median = new double[dim]; // Deleted below
 
     // sets median the middle of the sorted array
     for (int i = 0; i < dimension; i++)
@@ -437,8 +442,8 @@ void kdtree::insert(double **points, int amount, int dim)
         median[i] = points[amount / 2][i]; // Upper one maybe
     }
 
-    cout << "Amount: " << amount << endl;
-    cout << "Median: " << median[0] << ", " << median[1] << endl;
+/*    cout << "Amount: " << amount << endl;
+    cout << "Median: " << median[0] << ", " << median[1] << endl;*/
 
     // Handle how the overall bounds change due to this new point
     if (root == nullptr)
@@ -471,7 +476,7 @@ void kdtree::insert(double **points, int amount, int dim)
         return;
     }
 
-    // values lower/higher than the median
+    // values lower/higher than the median (all deleted below)
     auto **lower = new double*[amount/2];
     auto **higher = new double*[amount/2];
 
@@ -480,8 +485,6 @@ void kdtree::insert(double **points, int amount, int dim)
         lower[i] = new double[dimension];
         higher[i] = new double[dimension];
     }
-
-    int start_val;
 
     // sets lower and higher for even/odd amount of points
     if (amount % 2 == 0)
@@ -519,8 +522,10 @@ void kdtree::insert(double **points, int amount, int dim)
         }
     }
 
-    // median is inserted
+    // median is inserted and deleted
     root = insert_rec(root, median, 0);
+
+    delete median;
 
     dim = (dim + 1) % dimension;
 
